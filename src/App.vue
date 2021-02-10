@@ -54,16 +54,25 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-body {
-  margin: 0;
-  background: #2c3e50;
-  color: #fff;
+html {
+  width: 100%;
+  height: 100%;
 
-  a {
-    color: inherit;
+  body {
+    margin: 0;
+    background: #2c3e50;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+
+    a {
+      color: inherit;
+    }
   }
 }
 #app {
+  width: 100%;
+  height: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

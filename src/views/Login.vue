@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
     <h1>Login</h1>
     <form @submit.prevent="login">
       <input type="text" placeholder="E-Mail" v-model="email" />
@@ -39,6 +40,18 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
+  .logo {
+    width: 300px;
+    height: auto;
+  }
+}
 </style>
