@@ -1,5 +1,6 @@
 <template>
   <div class="register">
+    <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
     <h1>Register</h1>
     <form @submit.prevent="register">
       <input type="text" placeholder="E-Mail" v-model="email" />
@@ -39,4 +40,18 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.register {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .logo {
+    width: 300px;
+    height: auto;
+  }
+}
+</style>

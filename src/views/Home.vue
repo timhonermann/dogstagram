@@ -2,34 +2,31 @@
   <div class="home">
     <h1>Welcome, {{ name }}</h1>
     <router-link to="/about">About</router-link>
-    <br />
-    <button class="logout" @click="logout">Logout</button>
   </div>
 </template>
 
 <script lang="ts">
 import firebase from "firebase";
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
+import User = firebase.User;
 
 export default {
   name: "Home",
   setup() {
     const name = ref("");
-
-    onBeforeMount(() => {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        name.value = user.email?.split("@")[0] ?? "";
-      }
-    });
-
-    const logout = () => {
-      firebase.auth().signOut();
-    };
+    const user = firebase.auth().currentUser;
+    if (user) {
+      name.value = user.email?.split("@")[0] ?? "";
+    } else {
+      firebase.auth().onAuthStateChanged((user: User | null) => {
+        if (user) {
+          name.value = user.email?.split("@")[0] ?? "";
+        }
+      });
+    }
 
     return {
-      name,
-      logout
+      name
     };
   }
 };
