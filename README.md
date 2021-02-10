@@ -1,4 +1,4 @@
-# axuiliary-dogstagram
+# dogstagram
 
 ## Project setup
 ```

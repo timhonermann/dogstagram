@@ -10,28 +10,27 @@
 <script lang="ts">
 import firebase from "firebase";
 import { onBeforeMount, ref } from "vue";
-import { Options, Vue } from "vue-class-component";
 
-@Options({
-  data() {
+export default {
+  name: "Home",
+  setup() {
     const name = ref("");
-
-    const logout = () => {
-      firebase.auth().signOut();
-    };
 
     onBeforeMount(() => {
       const user = firebase.auth().currentUser;
       if (user) {
-        name.value = user.email?.split("@")[0] ?? "User Error";
+        name.value = user.email?.split("@")[0] ?? "";
       }
     });
+
+    const logout = () => {
+      firebase.auth().signOut();
+    };
 
     return {
       name,
       logout
     };
   }
-})
-export default class Home extends Vue {}
+};
 </script>
