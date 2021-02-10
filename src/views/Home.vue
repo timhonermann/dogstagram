@@ -1,15 +1,38 @@
 <template>
   <div class="home">
-    Home
+    <h1>Welcome, {{ name }}</h1>
+    <router-link to="/about">About</router-link>
+    <br>
+    <button class="logout" @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+import { onBeforeMount, ref } from 'vue';
+import firebase from "firebase";
 
 export default {
   name: 'Home',
-  components: {
+  setup() {
+    const name = ref('');
+
+    onBeforeMount(() => {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        name.value = user.email.split('@')[0];
+      }
+    });
+
+    const logout = () => {
+      firebase
+          .auth()
+          .signOut();
+    }
+
+    return {
+      name,
+      logout
+    }
   }
 }
 </script>
