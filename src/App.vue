@@ -1,46 +1,18 @@
 <template>
-  <router-view/>
+  <div id="nav">
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link>
+  </div>
+  <router-view />
 </template>
 
-<script lang="ts">
-import { isRoutePathLoginOrRegister } from '@/functions/is-route-path-login-or-register.function';
-import { defineComponent, onBeforeMount } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import firebase from 'firebase';
-
-export default defineComponent({
-  name: 'App',
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-
-    onBeforeMount(() => {
-      firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
-        if (!user) {
-          router.replace('/login');
-        } else if (isRoutePathLoginOrRegister(route)) {
-          router.replace('/');
-        }
-      })
-    });
-  }
-});
-</script>
-
 <style lang="scss">
-body {
-  background: #2c3e50;
-  color: #FFF;
-
-  a {
-    color: inherit;
-  }
-}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  color: #2c3e50;
 }
 
 #nav {
@@ -48,7 +20,11 @@ body {
 
   a {
     font-weight: bold;
-    color: red;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
   }
 }
 </style>

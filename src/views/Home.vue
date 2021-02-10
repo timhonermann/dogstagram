@@ -1,38 +1,18 @@
 <template>
   <div class="home">
-    <h1>Welcome, {{ name }}</h1>
-    <router-link to="/about">About</router-link>
-    <br>
-    <button class="logout" @click="logout">Logout</button>
+    <img alt="Vue logo" src="../assets/logo.png" />
+    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
   </div>
 </template>
 
-<script>
-import { onBeforeMount, ref } from 'vue';
-import firebase from "firebase";
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 
-export default {
-  name: 'Home',
-  setup() {
-    const name = ref('');
-
-    onBeforeMount(() => {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        name.value = user.email.split('@')[0];
-      }
-    });
-
-    const logout = () => {
-      firebase
-          .auth()
-          .signOut();
-    }
-
-    return {
-      name,
-      logout
-    }
+@Options({
+  components: {
+    HelloWorld
   }
-}
+})
+export default class Home extends Vue {}
 </script>
