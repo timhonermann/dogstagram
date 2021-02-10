@@ -3,21 +3,22 @@
 </template>
 
 <script lang="ts">
+import { isRoutePathLoginOrRegister } from '@/functions/is-route-path-login-or-register.function';
 import { defineComponent, onBeforeMount } from 'vue';
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from 'vue-router';
 import firebase from 'firebase';
-import { isRoutePathLoginOrRegister } from "@/functions/is-route-path-login-or-register.function";
 
 export default defineComponent({
   name: 'App',
   setup() {
     const router = useRouter();
+    const route = useRoute();
 
     onBeforeMount(() => {
       firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
         if (!user) {
           router.replace('/login');
-        } else if (isRoutePathLoginOrRegister()) {
+        } else if (isRoutePathLoginOrRegister(route)) {
           router.replace('/');
         }
       })

@@ -1,6 +1,7 @@
-import {useRoute} from "vue-router";
+import { RouteLocationNormalizedLoaded } from "vue-router";
 
-export function isRoutePathLoginOrRegister(): boolean {
-    const route = useRoute();
-    return route.path === '/login' || route.path === '/register';
+export function isRoutePathLoginOrRegister(
+  route: RouteLocationNormalizedLoaded
+): boolean {
+  return route.path === "/login" || route.path === "/register";
 }
