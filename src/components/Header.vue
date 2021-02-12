@@ -16,6 +16,8 @@
 
 <script lang="ts">
 import { NavigationItem } from "@/models/navigation-item.model";
+import router from "@/router";
+import { auth } from "@/settings/firebase";
 import firebase from "firebase";
 import { Options, Vue } from "vue-class-component";
 
@@ -31,7 +33,8 @@ export default class HelloWorld extends Vue {
   navigationItems: NavigationItem[] = [];
 
   logout = () => {
-    firebase.auth().signOut();
+    auth.signOut();
+    router.replace("/login");
   };
 }
 </script>

@@ -4,10 +4,9 @@
 </template>
 
 <script lang="ts">
-import { isRoutePathLoginOrRegister } from "@/functions/is-route-path-login-or-register.function";
 import { NavigationItem } from "@/models/navigation-item.model";
+import { auth } from "@/settings/firebase";
 import { defineComponent, onBeforeMount, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import firebase from "firebase";
 import Header from "./components/Header.vue";
 
@@ -17,10 +16,8 @@ export default defineComponent({
     Header
   },
   setup() {
-    const router = useRouter();
-    const route = useRoute();
     const navItems: NavigationItem[] = [];
-    const isLoggedIn = ref(false);
+    const isLoggedIn = ref(!!auth.currentUser);
     navItems.push({
       displayText: "Nav 1",
       routePath: "/home"
@@ -35,13 +32,8 @@ export default defineComponent({
     });
 
     onBeforeMount(() => {
-      firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
+      auth.onAuthStateChanged((user: firebase.User | null) => {
         isLoggedIn.value = !!user;
-        if (!isLoggedIn.value) {
-          router.replace("/login");
-        } else if (isRoutePathLoginOrRegister(route)) {
-          router.replace("/");
-        }
       });
     });
 
