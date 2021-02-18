@@ -1,34 +1,32 @@
 <template>
-  <Header v-if="isLoggedIn" v-bind:navigation-items="navItems"></Header>
+  <HeaderComponent v-if="isLoggedIn" v-bind:navigation-items="navItems"></HeaderComponent>
   <router-view />
 </template>
 
 <script lang="ts">
 import { NavigationItem } from "@/models/navigation-item.model";
 import { auth } from "@/settings/firebase";
-import { defineComponent, onBeforeMount, ref } from "vue";
 import firebase from "firebase";
-import Header from "./components/Header.vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
+import HeaderComponent from "./components/HeaderComponent.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    Header
+    HeaderComponent
   },
   setup() {
     const navItems: NavigationItem[] = [];
     const isLoggedIn = ref(!!auth.currentUser);
     navItems.push({
-      displayText: "Nav 1",
-      routePath: "/home"
+      displayText: "Home",
+      routePath: "/home",
+      iconName: "home.png"
     });
     navItems.push({
-      displayText: "Nav 2",
-      routePath: "/about"
-    });
-    navItems.push({
-      displayText: "Nav 3",
-      routePath: "/contact"
+      displayText: "Profile",
+      routePath: "/profile",
+      iconName: "profile.png"
     });
 
     onBeforeMount(() => {
@@ -72,6 +70,7 @@ html {
       &:hover {
         background-color: white;
         color: $ds_darkgrey;
+        cursor: pointer;
       }
     }
   }

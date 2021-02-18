@@ -1,12 +1,28 @@
 <template>
   <div class="header">
     <div class="logo-container">
-      <img class="logo" src="../assets/dogstagram_icon_white.png" alt="dogstagram Logo" />
+      <img
+        class="logo"
+        src="@/assets/dogstagram_icon_white.png"
+        alt="dogstagram Logo"
+      />
     </div>
     <div class="navigation">
-      <p v-for="navItem in navigationItems" v-bind:key="navItem.routePath">
-        displayText: {{ navItem.displayText }}, path: {{ navItem.routePath }}
-      </p>
+      <div
+        class="nav-item"
+        v-for="navItem in navigationItems"
+        v-bind:key="navItem.routePath"
+      >
+        <NavigationItemComponent
+          :displayName="navItem.displayText"
+          :iconName="navItem.iconName"
+          @click="navigate(navItem.routePath)"
+        ></NavigationItemComponent>
+      </div>
+<!--      <NavigationItemComponent-->
+<!--        :displayName="'Logout'"-->
+<!--        :iconName="'logout.png'"-->
+<!--        @click="logout"></NavigationItemComponent>-->
     </div>
     <div class="profile">
       <button class="logout" @click="logout">Logout</button>
@@ -15,13 +31,17 @@
 </template>
 
 <script lang="ts">
+import NavigationItemComponent from "@/components/NavigationItemComponent.vue";
 import { NavigationItem } from "@/models/navigation-item.model";
 import router from "@/router";
 import { auth } from "@/settings/firebase";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
-  name: "Header",
+  name: "HeaderComponent",
+  components: {
+    NavigationItemComponent
+  },
   props: {
     navigationItems: {
       type: Object,
@@ -29,8 +49,12 @@ import { Options, Vue } from "vue-class-component";
     }
   }
 })
-export default class Header extends Vue {
+export default class HeaderComponent extends Vue {
   navigationItems: NavigationItem[] = [];
+
+  navigate = (path: string) => {
+    router.replace(path);
+  };
 
   logout = () => {
     auth.signOut();
@@ -63,19 +87,25 @@ export default class Header extends Vue {
   }
 
   .navigation {
-    width: auto;
+    width: 60%;
     height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
+
+    .nav-item {
+      display: flex;
+      cursor: pointer;
+    }
   }
 
   .profile {
-    width: 10%;
+    width: 20%;
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-right: 15px;
   }
 }
 </style>

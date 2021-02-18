@@ -3,12 +3,14 @@
     <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
     <h1>Login</h1>
     <form @submit.prevent="login">
-      <input type="text" placeholder="E-Mail" v-model="email" />
-      <input type="password" placeholder="Password" v-model="password" />
-      <input type="submit" value="Login" />
-      <p>
-        Need an account? <router-link to="/register">Register here</router-link>
-      </p>
+      <div class="form-container">
+        <input class="input" type="text" placeholder="E-Mail" v-model="email" />
+        <input class="input" type="password" placeholder="Password" v-model="password" />
+        <input class="input" type="submit" value="Login" />
+        <p>
+          Need an account? <router-link to="/register">Register here</router-link>
+        </p>
+      </div>
     </form>
   </div>
 </template>
@@ -53,6 +55,15 @@ export default {
   .logo {
     width: 300px;
     height: auto;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+
+    .input {
+      margin-bottom: 5px;
+    }
   }
 }
 </style>
