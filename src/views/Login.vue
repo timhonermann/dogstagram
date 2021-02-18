@@ -58,6 +58,7 @@ export default {
   }
 
   .form-container {
+    width: 250px;
     display: flex;
     flex-direction: column;
 
