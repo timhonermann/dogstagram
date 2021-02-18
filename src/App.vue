@@ -46,19 +46,33 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "./style/variables.scss";
 html {
   width: 100%;
   height: 100%;
 
   body {
     margin: 0;
-    background: #2c3e50;
-    color: #fff;
+    background: $ds_blue;
+    color: white;
     width: 100%;
     height: 100%;
 
     a {
       color: inherit;
+    }
+
+    button {
+      border: 2px solid white;
+      border-radius: 20%;
+      background-color: $ds_darkgrey;
+      padding: 5px;
+      color: inherit;
+
+      &:hover {
+        background-color: white;
+        color: $ds_darkgrey;
+      }
     }
   }
 }

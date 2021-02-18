@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo-container">
-      <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
+      <img class="logo" src="../assets/dogstagram_icon_white.png" alt="dogstagram Logo" />
     </div>
     <div class="navigation">
       <p v-for="navItem in navigationItems" v-bind:key="navItem.routePath">
@@ -18,10 +18,10 @@
 import { NavigationItem } from "@/models/navigation-item.model";
 import router from "@/router";
 import { auth } from "@/settings/firebase";
-import firebase from "firebase";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
+  name: "Header",
   props: {
     navigationItems: {
       type: Object,
@@ -29,7 +29,7 @@ import { Options, Vue } from "vue-class-component";
     }
   }
 })
-export default class HelloWorld extends Vue {
+export default class Header extends Vue {
   navigationItems: NavigationItem[] = [];
 
   logout = () => {
@@ -40,11 +40,12 @@ export default class HelloWorld extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "../style/variables.scss";
 .header {
   width: 100%;
   height: 80px;
   display: flex;
-  background-color: gray;
+  background-color: $ds_darkgrey;
   justify-content: space-between;
 
   .logo-container {
@@ -56,7 +57,7 @@ export default class HelloWorld extends Vue {
     .logo {
       width: auto;
       height: calc(100% - 20px);
-      padding: 5px;
+      padding: 5px 15px;
       cursor: pointer;
     }
   }
