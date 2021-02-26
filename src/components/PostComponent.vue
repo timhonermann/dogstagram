@@ -1,27 +1,23 @@
 <template>
-  <div class="navigation-item">
-    <img :src="require(`@/assets/icons/${iconName}`)" alt="Nav Item Image" />
-    <p>{{ displayName }}</p>
+  <div class="post-container">
   </div>
 </template>
 
 <script lang="ts">
+import { Post } from "@/models/post.model";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "PostComponent",
   props: {
-    displayName: {
-      type: String,
-      required: true
-    },
-    iconName: {
-      type: String,
+    post: {
+      type: Object,
       required: true
     }
   }
 })
 export default class PostComponent extends Vue {
+  post: Post = {} as Post;
 }
 </script>
 
