@@ -19,10 +19,6 @@
           @click="navigate(navItem.routePath)"
         ></NavigationItemComponent>
       </div>
-<!--      <NavigationItemComponent-->
-<!--        :displayName="'Logout'"-->
-<!--        :iconName="'logout.png'"-->
-<!--        @click="logout"></NavigationItemComponent>-->
     </div>
     <div class="profile">
       <button class="logout" @click="logout">Logout</button>
@@ -82,7 +78,6 @@ export default class HeaderComponent extends Vue {
       width: auto;
       height: calc(100% - 20px);
       padding: 5px 15px;
-      cursor: pointer;
     }
   }
 

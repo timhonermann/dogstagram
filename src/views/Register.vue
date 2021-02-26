@@ -13,9 +13,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+
+import router from "@/router";
 import firebase from "firebase";
 import { ref } from "vue";
+import { auth, usersCollection } from "@/settings/firebase";
+import { Account } from "@/models";
+import UserCredential = firebase.auth.UserCredential;
 
 export default {
   name: "Register",
@@ -24,11 +29,20 @@ export default {
     const password = ref("");
 
     const register = () => {
-      firebase
-        .auth()
+      auth
         .createUserWithEmailAndPassword(email.value, password.value)
-        .then(user => {
-          alert(user);
+        .then((userCredential: UserCredential) => {
+          const account: Account = {
+            name: userCredential.user?.email?.split("@")[0] ?? "",
+            registeredAt:
+              userCredential.user?.metadata.creationTime ??
+              Date.now().toString()
+          };
+          usersCollection.doc(userCredential.user?.uid).set({
+            account
+          });
+
+          router.replace("/home");
         })
         .catch(err => alert(err.message));
     };
