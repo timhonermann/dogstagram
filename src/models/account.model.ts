@@ -1,4 +1,5 @@
 export interface Account {
-  name: string;
+  username: string;
+  email: string;
   registeredAt: string;
 }

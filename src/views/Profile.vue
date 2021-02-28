@@ -8,8 +8,11 @@
 
 <script lang="ts">
 
-import { auth } from "@/settings/firebase";
+import { auth, usersCollection } from "@/settings/firebase";
 import { ref } from "vue";
+import firebase from "firebase";
+import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+import { Account } from "@/models";
 
 export default {
   name: "Profile",
@@ -17,8 +20,12 @@ export default {
     const displayName = ref("");
     const photoUrl = ref("");
 
-    displayName.value = auth.currentUser?.displayName ?? "No Display Name";
-    photoUrl.value = auth.currentUser?.photoURL ?? "https://placekitten.com/200/300";
+    usersCollection.doc(auth.currentUser?.uid).get().then((documentSnapshot: DocumentSnapshot) => {
+      const account = documentSnapshot.data()?.account as Account;
+      displayName.value = account?.username;
+    });
+    photoUrl.value =
+      auth.currentUser?.photoURL ?? "https://placekitten.com/200/300";
 
     return {
       displayName,

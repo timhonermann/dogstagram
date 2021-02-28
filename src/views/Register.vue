@@ -1,20 +1,24 @@
 <template>
   <div class="register">
-    <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
+    <img class="logo" src="../assets/logo.png" alt="dogstagram Logo" />
     <h1>Register</h1>
-    <form @submit.prevent="register">
+    <form @submit.prevent="registerUser">
       <div class="form-container">
-      <input class="input" type="text" placeholder="E-Mail" v-model="email" />
-      <input class="input" type="password" placeholder="Password" v-model="password" />
-      <input class="input" type="submit" value="Register" />
-      <p>Have an account? <router-link to="/login">Login</router-link></p>
+        <input class="input" type="text" placeholder="E-Mail" v-model="email" />
+        <input
+          class="input"
+          type="password"
+          placeholder="Password"
+          v-model="password"
+        />
+        <input class="input" type="submit" value="Register" />
+        <p>Have an account? <router-link to="/login">Login</router-link></p>
       </div>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-
 import router from "@/router";
 import firebase from "firebase";
 import { ref } from "vue";
@@ -28,12 +32,15 @@ export default {
     const email = ref("");
     const password = ref("");
 
-    const register = () => {
+    const registerUser = () => {
       auth
         .createUserWithEmailAndPassword(email.value, password.value)
         .then((userCredential: UserCredential) => {
+          const name =
+            userCredential.user?.email?.toLocaleLowerCase().split("@")[0] ?? "";
           const account: Account = {
-            name: userCredential.user?.email?.split("@")[0] ?? "",
+            username: name,
+            email: email.value.toLowerCase(),
             registeredAt:
               userCredential.user?.metadata.creationTime ??
               Date.now().toString()
@@ -48,9 +55,9 @@ export default {
     };
 
     return {
-      register,
+      registerUser,
       email,
-      password
+      password,
     };
   }
 };
