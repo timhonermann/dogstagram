@@ -4,13 +4,11 @@
 </template>
 
 <script lang="ts">
-import { Account } from "@/models";
 import { NavigationItem } from "@/models/navigation-item.model";
 import { auth, usersCollection } from "@/settings/firebase";
 import firebase from "firebase";
 import { defineComponent, onBeforeMount, ref } from "vue";
 import HeaderComponent from "./components/HeaderComponent.vue";
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default defineComponent({
   name: "App",
@@ -26,6 +24,12 @@ export default defineComponent({
       routePath: "/home",
       iconName: "home.png"
     });
+
+    navItems.push({
+      displayText: "Upload",
+      routePath: "/home",
+      iconName: "add.png"
+    })
 
     navItems.push({
       displayText: "Profile",
@@ -64,6 +68,11 @@ html {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
 
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+
     a {
       color: inherit;
     }
@@ -80,6 +89,11 @@ html {
         color: $ds_darkgrey;
         cursor: pointer;
       }
+    }
+
+    LoadingComponent {
+      width: 100%;
+      height: 100%;
     }
   }
 }

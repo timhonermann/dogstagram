@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div v-if="hasLoaded()" class="profile">
     <h1>Profile</h1>
     <p>Display Name: {{ displayName }}</p>
     <img :src="photoUrl" alt="Profile picture" />
@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+import LoadingComponent from "@/components/LoadingComponent.vue";
 import { auth, usersCollection } from "@/settings/firebase";
 import { ref } from "vue";
 import firebase from "firebase";
@@ -18,6 +19,10 @@ export default {
   setup() {
     const displayName = ref("");
     const photoUrl = ref("");
+
+    const hasLoaded = (): boolean => {
+      return !!displayName.value;
+    }
 
     usersCollection
       .doc(auth.currentUser?.uid)
@@ -31,7 +36,8 @@ export default {
 
     return {
       displayName,
-      photoUrl
+      photoUrl,
+      hasLoaded
     };
   }
 };

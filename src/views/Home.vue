@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div v-if="hasLoaded()" class="home">
     <PostComponent
       v-for="post in posts"
       :post="post"
@@ -36,10 +36,15 @@ export default defineComponent({
       } as Post
     ];
 
+    const hasLoaded = (): boolean => {
+      return !!name.value && !!userUid.value;
+    };
+
     return {
       name,
       userUid,
-      posts
+      posts,
+      hasLoaded
     };
   }
 });

@@ -1,5 +1,5 @@
 <template>
-  <div class="post-container">
+  <div v-if="hasLoaded()" class="post-container">
     <div class="name-container">
       <p>{{ username }}</p>
     </div>
@@ -23,7 +23,12 @@
         <div class="image-container">
           <img :src="post.image" alt="post" />
         </div>
-        <div class="comments"></div>
+        <div class="comments">
+          <div class="comment-input">
+            <input @keydown.enter="postComment" v-model="newComment" placeholder="add comment..." />
+            <button @click="postComment">Post</button>
+          </div>
+        </div>
       </div>
     </div>
   </teleport>
@@ -32,7 +37,7 @@
 <script lang="ts">
 import { Account } from "@/models";
 import { Post } from "@/models/post.model";
-import { commentsCollection, usersCollection } from "@/settings/firebase";
+import { usersCollection } from "@/settings/firebase";
 import firebase from "firebase";
 import { PropType, ref } from "vue";
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
@@ -49,9 +54,9 @@ export default {
     const username = ref("");
     const showDetailPost = ref(false);
     const comments = ref([] as Comment[]);
+    const newComment = ref("");
 
     const toggleDetailView = () => {
-      console.log("triggered: ", showDetailPost.value);
       showDetailPost.value = !showDetailPost.value;
       // if (showDetailPost.value) {
       //   commentsCollection
@@ -63,6 +68,11 @@ export default {
       // }
     };
 
+    const postComment = () => {
+      console.log("posting comment: ", newComment.value);
+      newComment.value = "";
+    };
+
     usersCollection
       .doc(props.post.userUid)
       .get()
@@ -71,10 +81,17 @@ export default {
         username.value = account?.username;
       });
 
+    const hasLoaded = (): boolean => {
+      return !!username.value;
+    };
+
     return {
       username,
       showDetailPost,
-      toggleDetailView
+      newComment,
+      toggleDetailView,
+      postComment,
+      hasLoaded
     };
   }
 };
@@ -82,6 +99,7 @@ export default {
 
 <style scoped lang="scss">
 @import "../style/variables.scss";
+@import "../style/mixins.scss";
 .post-container {
   .image {
     cursor: pointer;
@@ -116,14 +134,26 @@ export default {
 
   .image-comments-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     height: 100%;
 
+    @include medium-screen {
+      flex-direction: row;
+    }
+
     .image-container {
-      width: 60%;
-      height: 90%;
-      padding: 0 10px;
+      width: 90%;
+      height: 60%;
+      padding: 0 30px;
       display: flex;
+
+      @include medium-screen {
+        width: 60%;
+        height: 90%;
+        padding: 0 10px 0 30px;
+      }
 
       img {
         margin: 0 auto;
@@ -134,10 +164,33 @@ export default {
     }
 
     .comments {
-      width: 40%;
-      height: 90%;
-      padding: 0 10px;
-      border-left: $ds_white 1px solid;
+      width: 90%;
+      height: 40%;
+      padding: 0 30px;
+      margin-top: 10px;
+
+      @include medium-screen {
+        width: 40%;
+        height: 90%;
+        border-left: $ds_white 1px solid;
+        margin: 0;
+        padding: 0 30px 0 10px;
+      }
+
+      .comment-input {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        //flex-direction: column;
+
+        button {
+          margin-left: 5px;
+        }
+
+        input {
+          width: 100%;
+        }
+      }
     }
   }
 }

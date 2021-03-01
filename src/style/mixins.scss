@@ -1,0 +1,19 @@
+@import "breakpoints.scss";
+
+@mixin small-screen {
+  @media (min-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+@mixin medium-screen {
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+@mixin large-screen {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
