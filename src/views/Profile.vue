@@ -7,7 +7,6 @@
 </template>
 
 <script lang="ts">
-
 import { auth, usersCollection } from "@/settings/firebase";
 import { ref } from "vue";
 import firebase from "firebase";
@@ -20,10 +19,13 @@ export default {
     const displayName = ref("");
     const photoUrl = ref("");
 
-    usersCollection.doc(auth.currentUser?.uid).get().then((documentSnapshot: DocumentSnapshot) => {
-      const account = documentSnapshot.data()?.account as Account;
-      displayName.value = account?.username;
-    });
+    usersCollection
+      .doc(auth.currentUser?.uid)
+      .get()
+      .then((documentSnapshot: DocumentSnapshot) => {
+        const account = documentSnapshot.data()?.account as Account;
+        displayName.value = account?.username;
+      });
     photoUrl.value =
       auth.currentUser?.photoURL ?? "https://placekitten.com/200/300";
 

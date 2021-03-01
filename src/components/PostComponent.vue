@@ -4,6 +4,9 @@
       <p>{{ username }}</p>
     </div>
     <img :src="post?.image" alt="post" />
+    <div class="caption-container">
+      <p>{{ post?.caption }}</p>
+    </div>
   </div>
 </template>
 

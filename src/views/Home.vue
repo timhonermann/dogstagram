@@ -1,13 +1,10 @@
 <template>
   <div class="home">
-    <h1>Welcome, {{ name }}</h1>
-    <p>UID: {{ userUid }}</p>
     <PostComponent
       v-for="post in posts"
       :post="post"
-      :key="post.userUid"
+      :key="post.uuid"
     ></PostComponent>
-    <router-link to="/profile">Profile</router-link>
   </div>
 </template>
 
