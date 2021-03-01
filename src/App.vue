@@ -56,9 +56,13 @@ html {
   body {
     margin: 0;
     background: $ds_blue;
-    color: white;
+    color: $ds_white;
     width: 100%;
     height: 100%;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
 
     a {
       color: inherit;
@@ -77,23 +81,6 @@ html {
         cursor: pointer;
       }
     }
-  }
-}
-#app {
-  width: 100%;
-  height: 100%;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: red;
   }
 }
 </style>

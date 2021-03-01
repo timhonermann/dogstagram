@@ -28,6 +28,7 @@ export default defineComponent({
 
     const posts: Post[] = [
       {
+        uuid: "1234",
         userUid: auth.currentUser?.uid,
         image: "https://picsum.photos/200/300",
         caption:
