@@ -1,24 +1,44 @@
 <template>
   <div class="post-container">
+    <div class="name-container">
+      <p>{{ username }}</p>
+    </div>
+    <img :src="post?.image" alt="post" />
   </div>
 </template>
 
 <script lang="ts">
+import { Account } from "@/models";
 import { Post } from "@/models/post.model";
-import { Options, Vue } from "vue-class-component";
+import { usersCollection } from "@/settings/firebase";
+import firebase from "firebase";
+import { defineComponent, toRefs, PropType, ref } from "vue";
+import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
-@Options({
+export default{
   name: "PostComponent",
   props: {
     post: {
-      type: Object,
+      type: Object as PropType<Post>,
       required: true
     }
+  },
+  setup(props: any) {
+    const username = ref("");
+
+    usersCollection
+      .doc(props.post.userUid)
+      .get()
+      .then((documentSnapshot: DocumentSnapshot) => {
+        const account = documentSnapshot.data()?.account as Account;
+        username.value = account?.username;
+      });
+
+    return {
+      username
+    };
   }
-})
-export default class PostComponent extends Vue {
-  post: Post = {} as Post;
-}
+};
 </script>
 
 <style scoped lang="scss">

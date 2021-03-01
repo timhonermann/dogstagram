@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img class="logo" src="../assets/logo.png" alt="dogstagram Logo" />
+    <img class="logo" src="../assets/Logo.png" alt="dogstagram Logo" />
     <h1>Login</h1>
     <form @submit.prevent="login">
       <div class="form-container">

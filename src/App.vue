@@ -4,11 +4,13 @@
 </template>
 
 <script lang="ts">
+import { Account } from "@/models";
 import { NavigationItem } from "@/models/navigation-item.model";
-import { auth } from "@/settings/firebase";
+import { auth, usersCollection } from "@/settings/firebase";
 import firebase from "firebase";
 import { defineComponent, onBeforeMount, ref } from "vue";
 import HeaderComponent from "./components/HeaderComponent.vue";
+import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default defineComponent({
   name: "App",
@@ -18,11 +20,13 @@ export default defineComponent({
   setup() {
     const navItems: NavigationItem[] = [];
     const isLoggedIn = ref(!!auth.currentUser);
+
     navItems.push({
       displayText: "Home",
       routePath: "/home",
       iconName: "home.png"
     });
+
     navItems.push({
       displayText: "Profile",
       routePath: "/profile",
