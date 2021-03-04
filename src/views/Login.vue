@@ -17,8 +17,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
 import router from "@/router";
+import { auth } from "@/settings/firebase";
 
 export default {
   name: "Login",
@@ -27,8 +27,7 @@ export default {
     const password = ref("");
 
     const login = () => {
-      firebase
-        .auth()
+      auth
         .signInWithEmailAndPassword(email.value, password.value)
         .then(() => router.replace("/"))
         .catch(err => alert(err.message));

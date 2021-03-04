@@ -7,7 +7,6 @@
 </template>
 
 <script lang="ts">
-import LoadingComponent from "@/components/LoadingComponent.vue";
 import { auth, usersCollection } from "@/settings/firebase";
 import { ref } from "vue";
 import firebase from "firebase";
