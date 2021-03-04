@@ -26,6 +26,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/upload",
+    name: "Upload",
+    component: () => import("../views/Upload.vue"),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),

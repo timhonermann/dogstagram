@@ -12,9 +12,13 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "firebase": "^8.2.6",
+    "firebase-admin": "^9.5.0",
+    "stylus-loader": "^3.0.2",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
+    "vue-dk-toast": "^2.1.2",
     "vue-router": "^4.0.0-0",
+    "vue-uuid": "^2.0.2",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

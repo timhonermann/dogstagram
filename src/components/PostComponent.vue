@@ -14,7 +14,7 @@
     </div>
   </div>
   <teleport to="#modals">
-    <div v-if="showDetailPost" class="detail-container">
+    <div v-if="showDetailPost" class="modal-container">
       <div class="post-header">
         <span>{{ username }}</span>
         <button class="close" @click="toggleDetailView">X</button>
@@ -25,7 +25,11 @@
         </div>
         <div class="comments">
           <div class="comment-input">
-            <input @keydown.enter="postComment" v-model="newComment" placeholder="add comment..." />
+            <input
+              @keydown.enter="postComment"
+              v-model="newComment"
+              placeholder="add comment..."
+            />
             <button @click="postComment">Post</button>
           </div>
         </div>
@@ -101,95 +105,96 @@ export default {
 @import "../style/variables.scss";
 @import "../style/mixins.scss";
 .post-container {
+  border: 1px solid black;
+
+  .name-container {
+    height: 40px;
+  }
+
   .image {
+    margin: 0 auto;
+    place-self: center;
+    max-width: 100%;
+    max-height: calc(70% - 25px);
     cursor: pointer;
+  }
+
+  .caption-container {
+    width: 100%;
+    height: calc(30% - 25px);
+    padding: 10px;
   }
 }
 
-.detail-container {
-  border: $ds_white solid 1px;
-  border-radius: 5%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% + 40px));
-  height: 80%;
-  width: 80%;
-  background: $ds_darkgrey;
+.post-header {
+  width: calc(100% - 60px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+  cursor: default;
+
+  .close {
+    width: 30px;
+  }
+}
+
+.image-comments-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 
-  .post-header {
-    width: calc(100% - 60px);
+  @include medium-screen {
+    flex-direction: row;
+  }
+
+  .image-container {
+    width: 90%;
+    height: 60%;
+    padding: 0 30px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px;
-    cursor: default;
 
-    .close {
-      width: 30px;
+    @include medium-screen {
+      width: 60%;
+      height: 90%;
+      padding: 0 10px 0 30px;
+    }
+
+    img {
+      margin: 0 auto;
+      place-self: center;
+      max-width: calc(100% - 10px);
+      max-height: calc(100% - 10px);
     }
   }
 
-  .image-comments-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+  .comments {
+    width: 90%;
+    height: 40%;
+    padding: 0 30px;
+    margin-top: 10px;
 
     @include medium-screen {
-      flex-direction: row;
+      width: 40%;
+      height: 90%;
+      border-left: $ds_white 1px solid;
+      margin: 0;
+      padding: 0 30px 0 10px;
     }
 
-    .image-container {
-      width: 90%;
-      height: 60%;
-      padding: 0 30px;
+    .comment-input {
       display: flex;
+      width: 100%;
+      justify-content: space-between;
 
-      @include medium-screen {
-        width: 60%;
-        height: 90%;
-        padding: 0 10px 0 30px;
+      button {
+        margin-left: 5px;
       }
 
-      img {
-        margin: 0 auto;
-        place-self: center;
-        max-width: calc(100% - 10px);
-        max-height: calc(100% - 10px);
-      }
-    }
-
-    .comments {
-      width: 90%;
-      height: 40%;
-      padding: 0 30px;
-      margin-top: 10px;
-
-      @include medium-screen {
-        width: 40%;
-        height: 90%;
-        border-left: $ds_white 1px solid;
-        margin: 0;
-        padding: 0 30px 0 10px;
-      }
-
-      .comment-input {
-        display: flex;
+      input {
         width: 100%;
-        justify-content: space-between;
-        //flex-direction: column;
-
-        button {
-          margin-left: 5px;
-        }
-
-        input {
-          width: 100%;
-        }
       }
     }
   }

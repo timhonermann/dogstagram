@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { NavigationItem } from "@/models/navigation-item.model";
-import { auth, usersCollection } from "@/settings/firebase";
+import { auth } from "@/settings/firebase";
 import firebase from "firebase";
 import { defineComponent, onBeforeMount, ref } from "vue";
 import HeaderComponent from "./components/HeaderComponent.vue";
@@ -27,9 +27,9 @@ export default defineComponent({
 
     navItems.push({
       displayText: "Upload",
-      routePath: "/home",
+      routePath: "/upload",
       iconName: "add.png"
-    })
+    });
 
     navItems.push({
       displayText: "Profile",
@@ -59,6 +59,7 @@ html {
 
   body {
     margin: 0;
+    padding: 0;
     background: $ds_blue;
     color: $ds_white;
     width: 100%;
@@ -85,10 +86,38 @@ html {
       color: inherit;
 
       &:hover {
-        background-color: white;
+        background-color: $ds_white;
         color: $ds_darkgrey;
         cursor: pointer;
       }
+
+      &:disabled {
+        background-color: $ds_grey;
+        color: white;
+        cursor: default;
+      }
+    }
+
+    .modal-container {
+      border: $ds_white solid 1px;
+      border-radius: 5%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, calc(-50% + 40px));
+      height: 80%;
+      width: 80%;
+      background: $ds_darkgrey;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .view-container {
+      width: calc(100% - 30px);
+      height: calc(100% - 80px);
+      padding: 0 15px;
+      display: flex;
+      justify-content: center;
     }
 
     LoadingComponent {

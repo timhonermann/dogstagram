@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasLoaded()" class="home">
+  <div class="view-container">
     <PostComponent
       v-for="post in posts"
       :post="post"
@@ -10,14 +10,18 @@
 
 <script lang="ts">
 import PostComponent from "@/components/PostComponent.vue";
-import { Post } from "@/models/post.model";
 import { auth } from "@/settings/firebase";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Home",
   components: { PostComponent },
   setup() {
+    const store = useStore();
+    const posts = computed(() => store.getters["allPosts"]);
+    store.dispatch("fetchPosts");
+
     const name = ref("");
     const userUid = ref("");
     const user = auth.currentUser;
@@ -26,16 +30,6 @@ export default defineComponent({
       userUid.value = user.uid;
     }
 
-    const posts: Post[] = [
-      {
-        uuid: "1234",
-        userUid: auth.currentUser?.uid,
-        image: "https://picsum.photos/200/300",
-        caption:
-          "This is my cat. I am very proud of her, even though she's an asshole most of the time. My dog Jackson is very gentle with here despite his impulsive nature"
-      } as Post
-    ];
-
     const hasLoaded = (): boolean => {
       return !!name.value && !!userUid.value;
     };
@@ -43,9 +37,11 @@ export default defineComponent({
     return {
       name,
       userUid,
-      posts,
-      hasLoaded
+      hasLoaded,
+      posts
     };
   }
 });
 </script>
+<style lang="scss">
+</style>

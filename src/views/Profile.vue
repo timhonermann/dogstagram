@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasLoaded()" class="profile">
+  <div class="view-container">
     <h1>Profile</h1>
     <p>Display Name: {{ displayName }}</p>
     <img :src="photoUrl" alt="Profile picture" />
@@ -45,4 +45,7 @@ export default {
 
 <style scoped lang="scss">
 @import "../style/variables.scss";
+.profile {
+
+}
 </style>

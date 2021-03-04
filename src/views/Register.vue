@@ -22,8 +22,8 @@
 import router from "@/router";
 import firebase from "firebase";
 import { ref } from "vue";
-import { auth, usersCollection } from "@/settings/firebase";
-import { Account } from "@/models";
+import { auth, postsCollection, usersCollection } from "@/settings/firebase";
+import { Account, Post } from "@/models";
 import UserCredential = firebase.auth.UserCredential;
 
 export default {
@@ -31,6 +31,16 @@ export default {
   setup() {
     const email = ref("");
     const password = ref("");
+
+    const setupFirestore = (uid: string, account: Account): void => {
+      usersCollection.doc(uid).set({
+        account
+      });
+
+      postsCollection.doc(uid).set({
+        posts: [] as Post[]
+      });
+    };
 
     const registerUser = () => {
       auth
@@ -45,11 +55,14 @@ export default {
               userCredential.user?.metadata.creationTime ??
               Date.now().toString()
           };
-          usersCollection.doc(userCredential.user?.uid).set({
-            account
-          });
 
-          router.replace("/home");
+          if (userCredential.user?.uid) {
+            setupFirestore(userCredential.user?.uid, account);
+
+            router.replace("/home");
+          } else {
+            alert("Error while registering");
+          }
         })
         .catch(err => alert(err.message));
     };

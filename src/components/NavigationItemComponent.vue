@@ -31,13 +31,13 @@ export default class NavigationItemComponent extends Vue {
 @import "../style/variables.scss";
 .navigation-item {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
 
   img {
-    margin-right: 5px;
     height: 24px;
     width: 24px;
   }
