@@ -26,6 +26,9 @@
           <img :src="post.image" alt="post" />
         </div>
         <div class="comments">
+          <div v-for="(comment, index) in comments" :key="index">
+            {{ comment.comment }}
+          </div>
           <div class="comment-input">
             <input
               @keydown.enter="postComment"
@@ -41,11 +44,12 @@
 </template>
 
 <script lang="ts">
-import { Account } from "@/models";
+import { Account, Comment } from "@/models";
 import { Post } from "@/models/post.model";
-import { usersCollection } from "@/settings/firebase";
+import { auth, usersCollection } from "@/settings/firebase";
 import firebase from "firebase";
-import { PropType, ref } from "vue";
+import { computed, PropType, ref } from "vue";
+import { useStore } from "vuex";
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default {
@@ -57,26 +61,35 @@ export default {
     }
   },
   setup(props: any) {
+    const postUuid: string = props?.post?.uuid;
+
+    const store = useStore();
+    const comments = computed(() => store.getters["getComments"](postUuid));
     const username = ref("");
     const showDetailPost = ref(false);
-    const comments = ref([] as Comment[]);
     const newComment = ref("");
 
     const toggleDetailView = () => {
       showDetailPost.value = !showDetailPost.value;
-      // if (showDetailPost.value) {
-      //   commentsCollection
-      //     .doc(props.post?.uuid)
-      //     .get()
-      //     .then((documentSnapshot: DocumentSnapshot) => {
-      //       comments.value = documentSnapshot.data() as Comment[];
-      //     });
-      // }
+      store.dispatch("fetchComments", postUuid);
     };
 
     const postComment = () => {
-      console.log("posting comment: ", newComment.value);
-      newComment.value = "";
+      if (newComment.value.trim() !== "") {
+        const comment: Comment = {
+          userUid: auth.currentUser?.uid ?? "",
+          comment: newComment.value,
+          commentedAt: new Date(),
+          username: ""
+        };
+        const payload: { postUuid: string; comment: Comment } = {
+          postUuid,
+          comment
+        };
+
+        store.dispatch("postComment", payload);
+        newComment.value = "";
+      }
     };
 
     usersCollection
@@ -95,6 +108,7 @@ export default {
       username,
       showDetailPost,
       newComment,
+      comments,
       toggleDetailView,
       postComment,
       hasLoaded

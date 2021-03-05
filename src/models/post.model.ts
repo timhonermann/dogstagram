@@ -3,4 +3,5 @@ export interface Post {
   userUid: string;
   caption: string;
   image: string;
+  postedAt: Date;
 }

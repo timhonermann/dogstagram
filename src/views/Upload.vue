@@ -70,7 +70,7 @@ export default {
       const fileSizeMb = file ? file.size / 1024 / 1024 : 0;
 
       const pattern = new RegExp("image/*");
-      if (fileSizeMb < 1 && file?.type.match(pattern)) {
+      if (fileSizeMb < 10 && file?.type.match(pattern)) {
         reader.addEventListener("load", () => {
           imageUrl.value = reader.result;
         });
@@ -96,7 +96,8 @@ export default {
             uuid: v4(),
             userUid: auth.currentUser?.uid,
             caption: caption.value,
-            image: result.data.secure_url
+            image: result.data.secure_url,
+            postedAt: new Date()
           } as Post;
 
           store.dispatch("uploadPost", post).then(() => {

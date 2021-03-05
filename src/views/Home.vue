@@ -2,9 +2,7 @@
   <div class="view-container">
     <div class="posts">
       <div class="post" v-for="post in posts" :key="post.uuid">
-        <PostComponent
-          :post="post"
-        ></PostComponent>
+        <PostComponent :post="post"></PostComponent>
       </div>
     </div>
   </div>
