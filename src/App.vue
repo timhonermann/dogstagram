@@ -60,7 +60,7 @@ html {
   body {
     margin: 0;
     padding: 0;
-    background: $ds_blue;
+    background: $ds_black;
     color: $ds_white;
     width: 100%;
     height: 100%;
@@ -72,6 +72,7 @@ html {
     #app {
       width: 100%;
       height: 100%;
+      overflow: hidden;
     }
 
     a {
@@ -100,14 +101,13 @@ html {
 
     .modal-container {
       border: $ds_white solid 1px;
-      border-radius: 5%;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, calc(-50% + 40px));
       height: 80%;
       width: 80%;
-      background: $ds_darkgrey;
+      background: $ds_black_transparent;
       display: flex;
       flex-direction: column;
     }
@@ -118,6 +118,7 @@ html {
       padding: 0 15px;
       display: flex;
       justify-content: center;
+      overflow: auto;
     }
 
     LoadingComponent {

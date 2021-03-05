@@ -24,10 +24,6 @@
       <button class="logout" @click="logout">Logout</button>
     </div>
   </div>
-  <teleport to="#modals">
-    <div v-if="isUploadView" class="modal-container">
-    </div>
-  </teleport>
 </template>
 
 <script lang="ts">
@@ -48,11 +44,10 @@ import { Options, Vue } from "vue-class-component";
       type: Object,
       required: true
     }
-  },
+  }
 })
 export default class HeaderComponent extends Vue {
   navigationItems: NavigationItem[] = [];
-  isUploadView = ref(false);
 
   navigate = (path: string) => {
     router.replace(path);

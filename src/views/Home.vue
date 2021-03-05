@@ -1,10 +1,12 @@
 <template>
   <div class="view-container">
-    <PostComponent
-      v-for="post in posts"
-      :post="post"
-      :key="post.uuid"
-    ></PostComponent>
+    <div class="posts">
+      <div class="post" v-for="post in posts" :key="post.uuid">
+        <PostComponent
+          :post="post"
+        ></PostComponent>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,4 +46,44 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@import "../style/mixins.scss";
+.posts {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 100%;
+  height: 100%;
+
+  &::after {
+    content: "";
+    display: block;
+    flex: 0 0 100%;
+
+    @include medium-screen {
+      flex: 0 0 45%;
+    }
+
+    @include large-screen {
+      flex: 0 0 30%;
+    }
+  }
+
+  .post {
+    width: 100%;
+    height: 80%;
+    margin-top: 10px;
+
+    @include medium-screen {
+      width: 45%;
+      height: 40%;
+    }
+
+    @include large-screen {
+      width: 30%;
+      height: 40%;
+    }
+  }
+}
 </style>

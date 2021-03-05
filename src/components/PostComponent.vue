@@ -1,14 +1,16 @@
 <template>
   <div v-if="hasLoaded()" class="post-container">
-    <div class="name-container">
-      <p>{{ username }}</p>
+    <div class="image-container">
+      <img
+        @click="toggleDetailView"
+        class="image"
+        :src="post?.image"
+        alt="post"
+      />
     </div>
-    <img
-      @click="toggleDetailView"
-      class="image"
-      :src="post?.image"
-      alt="post"
-    />
+    <div class="name-container">
+      <span>{{ username }}</span>
+    </div>
     <div class="caption-container">
       <p>{{ post?.caption }}</p>
     </div>
@@ -105,24 +107,51 @@ export default {
 @import "../style/variables.scss";
 @import "../style/mixins.scss";
 .post-container {
-  border: 1px solid black;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
   .name-container {
-    height: 40px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+
+    span {
+      font-style: italic;
+      font-size: 10px;
+      margin: 5px 0;
+    }
   }
 
-  .image {
-    margin: 0 auto;
-    place-self: center;
-    max-width: 100%;
-    max-height: calc(70% - 25px);
-    cursor: pointer;
+  .image-container {
+    width: 100%;
+    height: 63%;
+    display: flex;
+
+    img {
+      margin: 0 auto;
+      place-self: center;
+      max-width: calc(100% - 10px);
+      max-height: calc(100% - 5px);
+      cursor: pointer;
+    }
   }
 
   .caption-container {
-    width: 100%;
+    margin: 5px 10px;
+    width: calc(100% - 20px);
     height: calc(30% - 25px);
-    padding: 10px;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    p {
+      word-break: break-word;
+    }
   }
 }
 
@@ -144,7 +173,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 90px);
 
   @include medium-screen {
     flex-direction: row;
