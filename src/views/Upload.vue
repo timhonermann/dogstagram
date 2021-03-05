@@ -1,10 +1,20 @@
 <template>
   <div class="view-container upload-container">
     <div class="metadata-container">
-      <input id="fileSelection" style="display: none" type="file" accept="image/*" @change="onFileSelected" />
+      <input
+        id="fileSelection"
+        style="display: none"
+        type="file"
+        accept="image/*"
+        @change="onFileSelected"
+      />
       <button @click="openFileBrowser">Choose Image</button>
       <div class="textarea-container">
-        <textarea v-model="caption" placeholder="caption..." maxlength="250"></textarea>
+        <textarea
+          v-model="caption"
+          placeholder="caption..."
+          maxlength="250"
+        ></textarea>
         <div class="length">{{ caption.length ?? 0 }}/250</div>
       </div>
     </div>
@@ -21,7 +31,9 @@
 
 <script lang="ts">
 import { Post } from "@/models";
+import { Cloudinary, CloudinaryApiResponse } from "@/settings/cloudinary";
 import { auth } from "@/settings/firebase";
+import { AxiosResponse } from "axios";
 import { computed, ref, inject } from "vue";
 import { Toast } from "vue-dk-toast";
 import { useStore } from "vuex";
@@ -49,17 +61,27 @@ export default {
     const onFileSelected = (event: Event) => {
       const target = event.target as HTMLInputElement;
       const file = target?.files?.item(0);
+
+      if (!file) {
+        return;
+      }
+
       const reader = new FileReader();
+      const fileSizeMb = file ? file.size / 1024 / 1024 : 0;
 
       const pattern = new RegExp("image/*");
-      if (file?.type.match(pattern)) {
+      if (fileSizeMb < 1 && file?.type.match(pattern)) {
         reader.addEventListener("load", () => {
           imageUrl.value = reader.result;
         });
         reader.readAsDataURL(file);
         isImagePresent.value = true;
       } else {
-        alert("Invalid image type");
+        if (toast) {
+          toast("Invalid Image (Invalid file type or file size > 1MB)", {
+            type: "error"
+          });
+        }
       }
     };
 
@@ -68,19 +90,30 @@ export default {
     });
 
     const uploadPost = (): void => {
-      const post = {
-        uuid: v4(),
-        userUid: auth.currentUser?.uid,
-        caption: caption.value,
-        image: imageUrl.value
-      } as Post;
-      store.dispatch("uploadPost", post).then(() => {
-        if (toast) {
-          toast("Successfully Uploaded", { type: "success" });
-        }
-        imageUrl.value = getDefaultImage();
-        caption.value = "";
-      });
+      Cloudinary.upload(imageUrl.value)
+        .then((result: AxiosResponse<CloudinaryApiResponse>) => {
+          const post = {
+            uuid: v4(),
+            userUid: auth.currentUser?.uid,
+            caption: caption.value,
+            image: result.data.secure_url
+          } as Post;
+
+          store.dispatch("uploadPost", post).then(() => {
+            if (toast) {
+              toast("Successfully Uploaded", { type: "success" });
+            }
+            imageUrl.value = getDefaultImage();
+            caption.value = "";
+          });
+        })
+        .catch(() => {
+          if (toast) {
+            toast("Error while uploading. Please try again.", {
+              type: "error"
+            });
+          }
+        });
     };
 
     return {
