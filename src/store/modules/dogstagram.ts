@@ -10,20 +10,26 @@ import firebase from "firebase";
 import FieldValue = firebase.firestore.FieldValue;
 import QuerySnapshot = firebase.firestore.QuerySnapshot;
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
-import DocumentData = firebase.firestore.DocumentData;
 
 interface DogstagramState {
+  account: Account;
   posts: Post[];
   comments: Map<string, Comment[]>;
 }
 
 const state: DogstagramState = {
+  account: {} as Account,
   posts: [],
   comments: new Map<string, Comment[]>()
 };
 
 const getters = {
+  getAccount: (state: DogstagramState) => state.account,
   allPosts: (state: DogstagramState) => state.posts,
+  userPosts: (state: DogstagramState) => {
+    return (userId: string) =>
+      state.posts.filter((post: Post) => post.userUid == userId);
+  },
   getComments: (state: DogstagramState) => {
     return (postUuid: string) => state.comments.get(postUuid);
   }
@@ -93,10 +99,41 @@ const actions = {
             commit("addComment", payload);
           });
       });
+  },
+
+  fetchAccount({ commit }: { commit: Function }, payload: { userId: string }) {
+    usersCollection
+      .doc(payload.userId)
+      .get()
+      .then((documentSnapshot: DocumentSnapshot) => {
+        commit("setAccount", documentSnapshot.data()?.account);
+      });
+  },
+
+  updateUsername(
+    { commit }: { commit: Function },
+    payload: { userId: string; username: string }
+  ) {
+    usersCollection
+      .doc(payload.userId)
+      .update({
+        account: {
+          username: payload.username
+        }
+      })
+      .then(() => commit("setUsername", payload.username));
   }
 };
 
 const mutations = {
+  setAccount: (state: DogstagramState, account: Account) => {
+    state.account = account;
+  },
+
+  setUsername: (state: DogstagramState, username: string) => {
+    state.account.username = username;
+  },
+
   setPosts: (state: DogstagramState, posts: Post[]) => {
     state.posts = posts;
   },

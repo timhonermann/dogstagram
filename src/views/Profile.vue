@@ -1,42 +1,33 @@
 <template>
   <div class="view-container">
-    <h1>Profile</h1>
-    <p>Display Name: {{ displayName }}</p>
-    <img :src="photoUrl" alt="Profile picture" />
+    <div class="profile">
+      <ProfileInformationComponent
+        :account="account"
+      ></ProfileInformationComponent>
+      <div class="user-posts">
+        <PostsComponent :user-id="userId"></PostsComponent>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { auth, usersCollection } from "@/settings/firebase";
-import { ref } from "vue";
-import firebase from "firebase";
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
-import { Account } from "@/models";
+import PostsComponent from "@/components/PostsComponent.vue";
+import ProfileInformationComponent from "@/components/ProfileInformationComponent.vue";
+import { auth } from "@/settings/firebase";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "Profile",
+  components: { ProfileInformationComponent, PostsComponent },
   setup() {
-    const displayName = ref("");
-    const photoUrl = ref("");
-
-    const hasLoaded = (): boolean => {
-      return !!displayName.value;
-    }
-
-    usersCollection
-      .doc(auth.currentUser?.uid)
-      .get()
-      .then((documentSnapshot: DocumentSnapshot) => {
-        const account = documentSnapshot.data()?.account as Account;
-        displayName.value = account?.username;
-      });
-    photoUrl.value =
-      auth.currentUser?.photoURL ?? "https://placekitten.com/200/300";
+    const store = useStore();
+    const account = computed(() => store.getters["getAccount"]);
+    store.dispatch("fetchAccount", { userId: auth.currentUser?.uid });
 
     return {
-      displayName,
-      photoUrl,
-      hasLoaded
+      account
     };
   }
 };
@@ -44,7 +35,18 @@ export default {
 
 <style scoped lang="scss">
 @import "../style/variables.scss";
-.profile {
 
+.profile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .user-posts {
+    display: flex;
+    border-top: solid 1px $ds_grey;
+    margin-top: 10px;
+    overflow: auto;
+  }
 }
 </style>

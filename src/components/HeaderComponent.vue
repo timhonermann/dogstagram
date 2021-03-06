@@ -6,6 +6,9 @@
         src="@/assets/dogstagram_icon_white.png"
         alt="dogstagram Logo"
       />
+      <div class="section-name-container">
+        <span>{{ sectionName }}</span>
+      </div>
     </div>
     <div class="navigation">
       <div
@@ -31,37 +34,44 @@ import NavigationItemComponent from "@/components/NavigationItemComponent.vue";
 import { NavigationItem } from "@/models/navigation-item.model";
 import router from "@/router";
 import { auth } from "@/settings/firebase";
-import { ref } from "vue";
-import { Options, Vue } from "vue-class-component";
+import { computed, PropType, ref } from "vue";
 
-@Options({
+export default {
   name: "HeaderComponent",
   components: {
     NavigationItemComponent
   },
   props: {
     navigationItems: {
-      type: Object,
+      type: Object as PropType<NavigationItem[]>,
       required: true
     }
+  },
+  setup() {
+    const sectionName = computed(() => router.currentRoute.value.name);
+
+    const navigate = (path: string) => {
+      router.replace(path);
+    };
+
+    const logout = () => {
+      auth.signOut();
+      router.replace("/login");
+    };
+
+
+    return {
+      sectionName,
+      navigate,
+      logout
+    };
   }
-})
-export default class HeaderComponent extends Vue {
-  navigationItems: NavigationItem[] = [];
-
-  navigate = (path: string) => {
-    router.replace(path);
-  };
-
-  logout = () => {
-    auth.signOut();
-    router.replace("/login");
-  };
 }
 </script>
 
 <style scoped lang="scss">
 @import "../style/variables.scss";
+@import "../style/mixins.scss";
 .header {
   width: 100%;
   height: 80px;
@@ -74,6 +84,14 @@ export default class HeaderComponent extends Vue {
     height: 100%;
     display: flex;
     align-items: center;
+
+    .section-name-container {
+      display: none;
+
+      @include medium-screen {
+        display: block;
+      }
+    }
 
     .logo {
       width: auto;

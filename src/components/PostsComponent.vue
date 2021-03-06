@@ -15,7 +15,7 @@ export default {
   name: "PostsComponent",
   components: { PostItemComponent },
   props: {
-    userUid: {
+    userId: {
       type: String,
       required: false
     }
@@ -23,8 +23,8 @@ export default {
   setup(props: any) {
     const store = useStore();
     const posts = computed(() => {
-      if (props.userUid) {
-        return store.getters["userPosts"](props.userUId);
+      if (props.userId) {
+        return store.getters["userPosts"](props.userId);
       } else {
         return store.getters["allPosts"];
       }
