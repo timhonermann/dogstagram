@@ -15,12 +15,14 @@ interface DogstagramState {
   account: Account;
   posts: Post[];
   comments: Map<string, Comment[]>;
+  usernames: Map<string, string>;
 }
 
 const state: DogstagramState = {
   account: {} as Account,
   posts: [],
-  comments: new Map<string, Comment[]>()
+  comments: new Map<string, Comment[]>(),
+  usernames: new Map<string, string>()
 };
 
 const getters = {
@@ -32,6 +34,9 @@ const getters = {
   },
   getComments: (state: DogstagramState) => {
     return (postUuid: string) => state.comments.get(postUuid);
+  },
+  getUsername: (state: DogstagramState) => {
+    return (userId: string) => state.usernames.get(userId);
   }
 };
 
@@ -121,7 +126,18 @@ const actions = {
           username: payload.username
         }
       })
-      .then(() => commit("setUsername", payload.username));
+      .then(() => commit("setAccountUsername", payload.username));
+  },
+
+  fetchUsername({ commit }: { commit: Function }, payload: { userId: string }) {
+    usersCollection
+      .doc(payload.userId)
+      .get()
+      .then((documentSnapshot: DocumentSnapshot) => {
+        const username = documentSnapshot.data()?.account?.username;
+
+        commit("setUsername", { userId: payload.userId, username: username });
+      });
   }
 };
 
@@ -130,7 +146,7 @@ const mutations = {
     state.account = account;
   },
 
-  setUsername: (state: DogstagramState, username: string) => {
+  setAccountUsername: (state: DogstagramState, username: string) => {
     state.account.username = username;
   },
 
@@ -171,6 +187,13 @@ const mutations = {
       }
     }
     state.comments.set(payload.postUuid, comments);
+  },
+
+  setUsername: (
+    state: DogstagramState,
+    payload: { userId: string; username: string }
+  ) => {
+    state.usernames.set(payload.userId, payload.username);
   }
 };
 

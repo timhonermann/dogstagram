@@ -35,6 +35,8 @@ import { NavigationItem } from "@/models/navigation-item.model";
 import router from "@/router";
 import { auth } from "@/settings/firebase";
 import { computed, PropType, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 export default {
   name: "HeaderComponent",
@@ -48,7 +50,17 @@ export default {
     }
   },
   setup() {
-    const sectionName = computed(() => router.currentRoute.value.name);
+    const store = useStore();
+    const route = useRoute();
+
+    const sectionName = computed(() => {
+      const sectionName = router.currentRoute.value.name;
+      if (sectionName !== "User Detail") {
+        return router.currentRoute.value.name;
+      } else {
+        return store.getters["getUsername"](route.params.userId);
+      }
+    });
 
     const navigate = (path: string) => {
       router.replace(path);

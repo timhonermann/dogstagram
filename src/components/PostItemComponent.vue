@@ -9,7 +9,7 @@
       />
     </div>
     <div class="name-container">
-      <span>{{ username }}</span>
+      <span @click="toUserDetail(post.userUid)">{{ username }}</span>
     </div>
     <div class="caption-container">
       <p>{{ post?.caption }}</p>
@@ -49,6 +49,7 @@
 import CommentComponent from "@/components/CommentComponent.vue";
 import { Account, Comment } from "@/models";
 import { Post } from "@/models/post.model";
+import router from "@/router";
 import { auth, usersCollection } from "@/settings/firebase";
 import firebase from "firebase";
 import { computed, PropType, ref } from "vue";
@@ -76,6 +77,10 @@ export default {
     const toggleDetailView = () => {
       showDetailPost.value = !showDetailPost.value;
       store.dispatch("fetchComments", postUuid);
+    };
+
+    const toUserDetail = (userId: string) => {
+      router.replace(`/user/${userId}`);
     };
 
     const postComment = () => {
@@ -115,7 +120,8 @@ export default {
       comments,
       toggleDetailView,
       postComment,
-      hasLoaded
+      hasLoaded,
+      toUserDetail
     };
   }
 };
@@ -138,6 +144,11 @@ export default {
       font-style: italic;
       font-size: 10px;
       margin: 5px 0;
+      cursor: pointer;
+
+      &:hover {
+        color: $ds_blue;
+      }
     }
   }
 

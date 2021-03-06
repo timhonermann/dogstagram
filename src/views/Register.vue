@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import { displayErrorToast } from "@/functions/display-error-toast";
 import router from "@/router";
 import firebase from "firebase";
 import { ref } from "vue";
@@ -46,8 +47,11 @@ export default {
       auth
         .createUserWithEmailAndPassword(email.value, password.value)
         .then((userCredential: UserCredential) => {
-          const name =
+          let name =
             userCredential.user?.email?.toLocaleLowerCase().split("@")[0] ?? "";
+          if (name.length > 16) {
+            name = name.substring(0, 16);
+          }
           const account: Account = {
             username: name,
             email: email.value.toLowerCase(),

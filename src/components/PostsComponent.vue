@@ -3,6 +3,9 @@
     <div class="post" v-for="post in posts" :key="post.uuid">
       <PostItemComponent :post="post"></PostItemComponent>
     </div>
+    <div class="no-posts">
+      <h1 v-if="posts.length === 0">Nothing has been posted yet...</h1>
+    </div>
   </div>
 </template>
 
@@ -77,6 +80,14 @@ export default {
       width: 30%;
       height: 40%;
     }
+  }
+
+  .no-posts {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

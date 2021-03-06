@@ -34,6 +34,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/user/:userId",
+    name: "User Detail",
+    component: () => import("../views/UserDetail.vue"),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),
