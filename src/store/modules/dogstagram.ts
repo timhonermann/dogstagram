@@ -1,10 +1,16 @@
 import { sortPostsByPostedAtDate } from "@/functions";
-import { Comment, Post } from "@/models";
-import { auth, commentsCollection, postsCollection } from "@/settings/firebase";
+import { Account, Comment, Post } from "@/models";
+import {
+  auth,
+  commentsCollection,
+  postsCollection,
+  usersCollection
+} from "@/settings/firebase";
 import firebase from "firebase";
 import FieldValue = firebase.firestore.FieldValue;
 import QuerySnapshot = firebase.firestore.QuerySnapshot;
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+import DocumentData = firebase.firestore.DocumentData;
 
 interface DogstagramState {
   posts: Post[];
@@ -55,8 +61,18 @@ const actions = {
       .doc(postUuid)
       .get()
       .then((documentSnapshot: DocumentSnapshot) => {
-        const comments = documentSnapshot.data()?.comments as Comment[];
+        const comments: Comment[] = documentSnapshot.data()
+          ?.comments as Comment[];
         commit("setComments", { postUuid, comments });
+
+        const usernames = new Map<string, string>();
+        usersCollection.get().then((querySnapshot: QuerySnapshot) => {
+          for (const doc of querySnapshot.docs) {
+            const account = doc.data()?.account as Account;
+            usernames.set(doc.id, account.username);
+          }
+          commit("updateCommentUsernames", { postUuid, usernames });
+        });
       });
   },
 
@@ -67,7 +83,16 @@ const actions = {
     commentsCollection
       .doc(payload.postUuid)
       .update("comments", FieldValue.arrayUnion(payload.comment))
-      .then(() => commit("addComment", payload));
+      .then(() => {
+        usersCollection
+          .doc(auth.currentUser?.uid)
+          .get()
+          .then((documentSnapshot: DocumentSnapshot) => {
+            const account = documentSnapshot.data()?.account as Account;
+            payload.comment.username = account.username;
+            commit("addComment", payload);
+          });
+      });
   }
 };
 
@@ -93,6 +118,21 @@ const mutations = {
   ) => {
     const comments: Comment[] = state.comments.get(payload.postUuid) ?? [];
     comments.push(payload.comment);
+    state.comments.set(payload.postUuid, comments);
+  },
+
+  updateCommentUsernames: (
+    state: DogstagramState,
+    payload: { postUuid: string; usernames: Map<string, string> }
+  ) => {
+    const comments: Comment[] = state.comments.get(payload.postUuid) ?? [];
+    for (const comment of comments) {
+      const username = payload.usernames.get(comment.userUid);
+      if (comment.username !== username) {
+        comment.username = username;
+        state.comments.get(payload.postUuid);
+      }
+    }
     state.comments.set(payload.postUuid, comments);
   }
 };

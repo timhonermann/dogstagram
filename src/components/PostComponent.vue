@@ -26,17 +26,19 @@
           <img :src="post.image" alt="post" />
         </div>
         <div class="comments">
-          <div v-for="(comment, index) in comments" :key="index">
-            {{ comment.comment }}
+          <div class="comments-container" v-for="(comment, index) in comments" :key="index">
+            <CommentComponent :comment="comment"></CommentComponent>
           </div>
           <div class="comment-input">
             <input
               @keydown.enter="postComment"
               v-model="newComment"
               placeholder="add comment..."
+              maxlength="100"
             />
             <button @click="postComment">Post</button>
           </div>
+          <span class="comment-size">{{ newComment.length ?? 0 }}/100</span>
         </div>
       </div>
     </div>
@@ -44,6 +46,7 @@
 </template>
 
 <script lang="ts">
+import CommentComponent from "@/components/CommentComponent.vue";
 import { Account, Comment } from "@/models";
 import { Post } from "@/models/post.model";
 import { auth, usersCollection } from "@/settings/firebase";
@@ -54,6 +57,7 @@ import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default {
   name: "PostComponent",
+  components: { CommentComponent },
   props: {
     post: {
       type: Object as PropType<Post>,
@@ -218,6 +222,7 @@ export default {
     height: 40%;
     padding: 0 30px;
     margin-top: 10px;
+    overflow: auto;
 
     @include medium-screen {
       width: 40%;
@@ -225,6 +230,10 @@ export default {
       border-left: $ds_white 1px solid;
       margin: 0;
       padding: 0 30px 0 10px;
+    }
+
+    .comments-container {
+      display: flex;
     }
 
     .comment-input {
@@ -239,6 +248,12 @@ export default {
       input {
         width: 100%;
       }
+    }
+
+    .comment-size {
+      display: flex;
+      width: calc(100% - 45px);
+      justify-content: flex-end;
     }
   }
 }
