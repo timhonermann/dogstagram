@@ -1,9 +1,11 @@
 <template>
   <div class="view-container">
     <div class="profile">
-      <ProfileInformationComponent
-        :account="account"
-      ></ProfileInformationComponent>
+      <div class="profile-information-container">
+        <ProfileInformationComponent
+          :account="account"
+        ></ProfileInformationComponent>
+      </div>
       <div class="user-posts">
         <PostsComponent :user-id="userId"></PostsComponent>
       </div>
@@ -23,11 +25,13 @@ export default {
   components: { ProfileInformationComponent, PostsComponent },
   setup() {
     const store = useStore();
+    const userId = auth.currentUser?.uid;
     const account = computed(() => store.getters["getAccount"]);
-    store.dispatch("fetchAccount", { userId: auth.currentUser?.uid });
+    store.dispatch("fetchAccount", { userId: userId });
 
     return {
-      account
+      account,
+      userId
     };
   }
 };
@@ -42,7 +46,13 @@ export default {
   display: flex;
   flex-direction: column;
 
+  .profile-information-container {
+    width: 100%;
+    height: 110px;
+  }
+
   .user-posts {
+    height: calc(100% - 110px);
     display: flex;
     border-top: solid 1px $ds_grey;
     margin-top: 10px;

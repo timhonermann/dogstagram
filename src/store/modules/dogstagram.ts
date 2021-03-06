@@ -1,5 +1,7 @@
 import { sortPostsByPostedAtDate } from "@/functions";
+import { setupFirestore } from "@/functions/setup-firestore.function";
 import { Account, Comment, Post } from "@/models";
+import router from "@/router";
 import {
   auth,
   commentsCollection,
@@ -7,25 +9,36 @@ import {
   usersCollection
 } from "@/settings/firebase";
 import firebase from "firebase";
+import { inject } from "vue";
+import { Toast } from "vue-dk-toast";
 import FieldValue = firebase.firestore.FieldValue;
 import QuerySnapshot = firebase.firestore.QuerySnapshot;
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+import UserCredential = firebase.auth.UserCredential;
+
+const toast = inject<Toast>("$toast");
 
 interface DogstagramState {
+  isLoggedIn: boolean;
   account: Account;
   posts: Post[];
   comments: Map<string, Comment[]>;
   usernames: Map<string, string>;
+  isLoading: boolean;
 }
 
 const state: DogstagramState = {
+  isLoggedIn: false,
   account: {} as Account,
   posts: [],
   comments: new Map<string, Comment[]>(),
-  usernames: new Map<string, string>()
+  usernames: new Map<string, string>(),
+  isLoading: false
 };
 
 const getters = {
+  isLoggedIn: (state: DogstagramState) => state.isLoggedIn,
+  isLoading: (state: DogstagramState) => state.isLoading,
   getAccount: (state: DogstagramState) => state.account,
   allPosts: (state: DogstagramState) => state.posts,
   userPosts: (state: DogstagramState) => {
@@ -41,6 +54,59 @@ const getters = {
 };
 
 const actions = {
+  login(
+    { commit }: { commit: Function },
+    payload: { email: string; password: string }
+  ) {
+    auth
+      .signInWithEmailAndPassword(payload.email, payload.password)
+      .then(() => {
+        commit("setLoggedIn", true);
+        router.replace("/");
+      })
+      .catch(err =>
+        toast ? toast(err.message, { type: "error" }) : alert(err.message)
+      );
+  },
+
+  logout({ commit }: { commit: Function }) {
+    return auth.signOut().then(() => {
+      commit("setLoggedIn", false);
+      router.replace("/login");
+    });
+  },
+
+  register(
+    { commit }: { commit: Function },
+    payload: { email: string; password: string }
+  ) {
+    auth
+      .createUserWithEmailAndPassword(payload.email, payload.password)
+      .then((userCredential: UserCredential) => {
+        let name =
+          userCredential.user?.email?.toLocaleLowerCase().split("@")[0] ?? "";
+        if (name.length > 16) {
+          name = name.substring(0, 16);
+        }
+
+        const account: Account = {
+          username: name,
+          email: payload.email.toLowerCase(),
+          registeredAt:
+            userCredential.user?.metadata.creationTime ?? Date.now().toString()
+        };
+
+        if (userCredential.user?.uid) {
+          setupFirestore(userCredential.user?.uid, account);
+
+          router.replace("/home");
+        }
+
+        commit("setLoggedIn", true);
+      })
+      .catch(err => alert(err.message));
+  },
+
   fetchPosts({ commit }: { commit: Function }) {
     postsCollection.get().then((response: QuerySnapshot) => {
       const posts: Post[] = [];
@@ -48,9 +114,7 @@ const actions = {
         const receivedPosts = (doc.data()?.posts as Post[]) ?? [];
         posts.push(...receivedPosts);
       }
-      console.log("unsorted: ", posts);
       const sortedPosts = sortPostsByPostedAtDate(posts);
-      console.log("sorted: ", sortedPosts);
       commit("setPosts", sortedPosts);
     });
   },
@@ -122,9 +186,7 @@ const actions = {
     usersCollection
       .doc(payload.userId)
       .update({
-        account: {
-          username: payload.username
-        }
+        "account.username": payload.username
       })
       .then(() => commit("setAccountUsername", payload.username));
   },
@@ -142,6 +204,14 @@ const actions = {
 };
 
 const mutations = {
+  setLoggedIn: (state: DogstagramState, isLoggedIn: boolean) => {
+    state.isLoggedIn = isLoggedIn;
+  },
+
+  setIsLoading: (state: DogstagramState, isLoading: boolean) => {
+    state.isLoading = isLoading;
+  },
+
   setAccount: (state: DogstagramState, account: Account) => {
     state.account = account;
   },

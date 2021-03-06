@@ -44,6 +44,8 @@ export default {
         username.value?.length >= 3
     );
 
+    const account: Account = props?.account;
+
     const changeUsername = () => {
       const payload = {
         userId: userId,

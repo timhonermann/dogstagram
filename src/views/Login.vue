@@ -17,20 +17,18 @@
 
 <script>
 import { ref } from "vue";
-import router from "@/router";
-import { auth } from "@/settings/firebase";
+import { useStore } from "vuex";
 
 export default {
   name: "Login",
   setup() {
+    const store = useStore();
+
     const email = ref("");
     const password = ref("");
 
     const login = () => {
-      auth
-        .signInWithEmailAndPassword(email.value, password.value)
-        .then(() => router.replace("/"))
-        .catch(err => alert(err.message));
+      store.dispatch("login", { email: email.value, password: password.value });
     };
 
     return {

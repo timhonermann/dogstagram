@@ -19,62 +19,28 @@
 </template>
 
 <script lang="ts">
-import { displayErrorToast } from "@/functions/display-error-toast";
-import router from "@/router";
-import firebase from "firebase";
 import { ref } from "vue";
-import { auth, postsCollection, usersCollection } from "@/settings/firebase";
-import { Account, Post } from "@/models";
-import UserCredential = firebase.auth.UserCredential;
+import { useStore } from "vuex";
 
 export default {
   name: "Register",
   setup() {
+    const store = useStore();
+
     const email = ref("");
     const password = ref("");
 
-    const setupFirestore = (uid: string, account: Account): void => {
-      usersCollection.doc(uid).set({
-        account
-      });
-
-      postsCollection.doc(uid).set({
-        posts: [] as Post[]
-      });
-    };
-
     const registerUser = () => {
-      auth
-        .createUserWithEmailAndPassword(email.value, password.value)
-        .then((userCredential: UserCredential) => {
-          let name =
-            userCredential.user?.email?.toLocaleLowerCase().split("@")[0] ?? "";
-          if (name.length > 16) {
-            name = name.substring(0, 16);
-          }
-          const account: Account = {
-            username: name,
-            email: email.value.toLowerCase(),
-            registeredAt:
-              userCredential.user?.metadata.creationTime ??
-              Date.now().toString()
-          };
-
-          if (userCredential.user?.uid) {
-            setupFirestore(userCredential.user?.uid, account);
-
-            router.replace("/home");
-          } else {
-            alert("Error while registering");
-          }
-        })
-        .catch(err => alert(err.message));
+      store.dispatch("register", {
+        email: email.value,
+        password: password.value
+      });
     };
 
     return {
       registerUser,
       email,
-      password,
+      password
     };
   }
 };

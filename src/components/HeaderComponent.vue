@@ -67,10 +67,8 @@ export default {
     };
 
     const logout = () => {
-      auth.signOut();
-      router.replace("/login");
+      store.dispatch("logout");
     };
-
 
     return {
       sectionName,
@@ -121,12 +119,13 @@ export default {
 
     .nav-item {
       display: flex;
+      width: 51px;
       cursor: pointer;
     }
   }
 
   .profile {
-    width: 20%;
+    width: calc(20% - 15px);
     height: 100%;
     display: flex;
     align-items: center;

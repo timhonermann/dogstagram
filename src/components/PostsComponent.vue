@@ -3,8 +3,8 @@
     <div class="post" v-for="post in posts" :key="post.uuid">
       <PostItemComponent :post="post"></PostItemComponent>
     </div>
-    <div class="no-posts">
-      <h1 v-if="posts.length === 0">Nothing has been posted yet...</h1>
+    <div v-if="posts.length === 0" class="no-posts">
+      <h1>Nothing has been posted yet...</h1>
     </div>
   </div>
 </template>
