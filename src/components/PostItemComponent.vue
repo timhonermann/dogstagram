@@ -56,7 +56,7 @@ import { useStore } from "vuex";
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default {
-  name: "PostComponent",
+  name: "PostItemComponent",
   components: { CommentComponent },
   props: {
     post: {
