@@ -24,6 +24,7 @@
       </div>
     </div>
     <div class="profile">
+      <span class="user">{{ username }}</span>
       <button class="logout" @click="logout">Logout</button>
     </div>
   </div>
@@ -53,6 +54,8 @@ export default {
     const store = useStore();
     const route = useRoute();
 
+    const username = computed(() => store.getters["getUsername"](auth.currentUser?.uid));
+    store.dispatch("fetchUsername", { userId: auth.currentUser?.uid });
     const sectionName = computed(() => {
       const sectionName = router.currentRoute.value.name;
       if (sectionName !== "User Detail") {
@@ -72,6 +75,7 @@ export default {
 
     return {
       sectionName,
+      username,
       navigate,
       logout
     };
@@ -131,6 +135,16 @@ export default {
     align-items: center;
     justify-content: flex-end;
     padding-right: 15px;
+
+    .user {
+      display: none;
+
+      @include medium-screen {
+        display: block;
+        margin-right: 15px;
+        font-size: 11px;
+      }
+    }
   }
 }
 </style>
