@@ -128,7 +128,7 @@ html {
       cursor: pointer;
 
       &:hover {
-        color: $ds_blue;
+        color: $ds_grey;
       }
     }
   }

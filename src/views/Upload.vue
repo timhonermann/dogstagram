@@ -78,7 +78,7 @@ export default {
         isImagePresent.value = true;
       } else {
         if (toast) {
-          toast("Invalid Image (Invalid file type or file size > 1MB)", {
+          toast("Invalid Image (Invalid file type or file size > 10 MB)", {
             type: "error"
           });
         }

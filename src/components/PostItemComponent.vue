@@ -12,7 +12,7 @@
       <span class="username" @click="redirectToUserDetailPage(post.userUid)">{{ username }}</span>
     </div>
     <div class="caption-container">
-      <p>{{ post?.caption }}</p>
+      <span>{{ post?.caption }}</span>
     </div>
   </div>
   <teleport to="#modals">
@@ -175,7 +175,7 @@ export default {
       display: none;
     }
 
-    p {
+    span {
       word-break: break-word;
     }
   }
