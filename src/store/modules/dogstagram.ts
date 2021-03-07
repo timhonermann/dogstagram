@@ -97,9 +97,9 @@ const actions = {
         };
 
         if (userCredential.user?.uid) {
-          setupFirestore(userCredential.user?.uid, account);
-
-          router.replace("/home");
+          setupFirestore(userCredential.user?.uid, account).then(() =>
+            router.replace("/home")
+          );
         }
 
         commit("setLoggedIn", true);
@@ -111,7 +111,11 @@ const actions = {
     postsCollection.get().then((response: QuerySnapshot) => {
       const posts: Post[] = [];
       for (const doc of response.docs) {
+        const data = doc.data();
         const receivedPosts = (doc.data()?.posts as Post[]) ?? [];
+        receivedPosts.map(
+          (post: any) => (post.postedAt = post.postedAt.toDate())
+        );
         posts.push(...receivedPosts);
       }
       const sortedPosts = sortPostsByPostedAtDate(posts);
@@ -188,7 +192,7 @@ const actions = {
       .update({
         "account.username": payload.username
       })
-      .then(() => commit("setAccountUsername", payload.username));
+      .then(() => commit("setAccountUsername", payload));
   },
 
   fetchUsername({ commit }: { commit: Function }, payload: { userId: string }) {
@@ -216,8 +220,12 @@ const mutations = {
     state.account = account;
   },
 
-  setAccountUsername: (state: DogstagramState, username: string) => {
-    state.account.username = username;
+  setAccountUsername: (
+    state: DogstagramState,
+    payload: { userId: string; username: string }
+  ) => {
+    state.account.username = payload.username;
+    state.usernames.set(payload.userId, payload.username);
   },
 
   setPosts: (state: DogstagramState, posts: Post[]) => {
