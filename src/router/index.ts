@@ -1,6 +1,7 @@
 import { auth } from "@/settings/firebase";
 import {
   createRouter,
+  createWebHashHistory,
   createWebHistory,
   NavigationGuardNext,
   RouteLocationNormalized,
@@ -64,7 +65,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 });
 
