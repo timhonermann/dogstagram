@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasLoaded()" class="post-container">
+  <div class="post-container">
     <div class="image-container">
       <img
         @click="toggleDetailView"
@@ -52,14 +52,11 @@
 <script lang="ts">
 import CommentComponent from "@/components/CommentComponent.vue";
 import { redirectToUserDetailPage } from "@/functions/redirect-to-user-detail-page.function";
-import { Account, Comment } from "@/models";
+import { Comment } from "@/models";
 import { Post } from "@/models/post.model";
-import router from "@/router";
-import { auth, usersCollection } from "@/settings/firebase";
-import firebase from "firebase";
+import { auth } from "@/settings/firebase";
 import { computed, PropType, ref } from "vue";
 import { useStore } from "vuex";
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export default {
   name: "PostItemComponent",
@@ -78,9 +75,13 @@ export default {
 
     const store = useStore();
     const comments = computed(() => store.getters["getComments"](postUuid));
-    const username = ref("");
+    const username = computed(() =>
+      store.getters["getUsername"](props.post.userUid)
+    );
     const showDetailPost = ref(false);
     const newComment = ref("");
+
+    store.dispatch("fetchUsername", { userId: props.post.userUid });
 
     const toggleDetailView = () => {
       showDetailPost.value = !showDetailPost.value;
@@ -109,18 +110,6 @@ export default {
       }
     };
 
-    usersCollection
-      .doc(props.post.userUid)
-      .get()
-      .then((documentSnapshot: DocumentSnapshot) => {
-        const account = documentSnapshot.data()?.account as Account;
-        username.value = account?.username;
-      });
-
-    const hasLoaded = (): boolean => {
-      return !!username.value;
-    };
-
     return {
       username,
       showDetailPost,
@@ -128,7 +117,6 @@ export default {
       comments,
       toggleDetailView,
       postComment,
-      hasLoaded,
       toUserDetail
     };
   }
