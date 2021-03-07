@@ -1,12 +1,13 @@
 <template>
   <div class="container">
-    <span class="username">{{ comment.username }}:</span>
+    <span class="username" @click="redirectToUserDetailPage(comment.userUid)">{{ comment.username }}:</span>
     <span class="comment">{{ comment.comment }}</span>
   </div>
 </template>
 
 <script lang="ts">
 import { PropType } from "vue";
+import { redirectToUserDetailPage } from "@/functions"
 export default {
   name: "CommentComponent",
   props: {
@@ -14,6 +15,9 @@ export default {
       type: Object as PropType<Comment>,
       required: true
     }
+  },
+  methods: {
+    redirectToUserDetailPage: redirectToUserDetailPage
   }
 };
 </script>

@@ -9,7 +9,7 @@
       />
     </div>
     <div class="name-container">
-      <span @click="toUserDetail(post.userUid)">{{ username }}</span>
+      <span class="username" @click="redirectToUserDetailPage(post.userUid)">{{ username }}</span>
     </div>
     <div class="caption-container">
       <p>{{ post?.caption }}</p>
@@ -18,7 +18,7 @@
   <teleport to="#modals">
     <div v-if="showDetailPost" class="modal-container">
       <div class="post-header">
-        <span>{{ username }}</span>
+        <span class="username" @click="redirectToUserDetailPage(post.userUid)">{{ username }}</span>
         <button class="close" @click="toggleDetailView">X</button>
       </div>
       <div class="image-comments-container">
@@ -26,7 +26,11 @@
           <img :src="post.image" alt="post" />
         </div>
         <div class="comments">
-          <div class="comments-container" v-for="(comment, index) in comments" :key="index">
+          <div
+            class="comments-container"
+            v-for="(comment, index) in comments"
+            :key="index"
+          >
             <CommentComponent :comment="comment"></CommentComponent>
           </div>
           <div class="comment-input">
@@ -47,6 +51,7 @@
 
 <script lang="ts">
 import CommentComponent from "@/components/CommentComponent.vue";
+import { redirectToUserDetailPage } from "@/functions/redirect-to-user-detail-page.function";
 import { Account, Comment } from "@/models";
 import { Post } from "@/models/post.model";
 import router from "@/router";
@@ -65,6 +70,9 @@ export default {
       required: true
     }
   },
+  methods: {
+    redirectToUserDetailPage: redirectToUserDetailPage
+  },
   setup(props: any) {
     const postUuid: string = props?.post?.uuid;
 
@@ -80,7 +88,7 @@ export default {
     };
 
     const toUserDetail = (userId: string) => {
-      router.replace(`/user/${userId}`);
+      redirectToUserDetailPage(userId)
     };
 
     const postComment = () => {
@@ -139,17 +147,6 @@ export default {
     height: 25px;
     display: flex;
     justify-content: center;
-
-    span {
-      font-style: italic;
-      font-size: 10px;
-      margin: 5px 0;
-      cursor: pointer;
-
-      &:hover {
-        color: $ds_blue;
-      }
-    }
   }
 
   .image-container {
@@ -191,6 +188,11 @@ export default {
   align-items: center;
   padding: 30px;
   cursor: default;
+
+  .username {
+    font-style: normal;
+    font-size: 18px;
+  }
 
   .close {
     width: 30px;

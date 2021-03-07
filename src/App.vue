@@ -121,9 +121,15 @@ html {
       overflow: auto;
     }
 
-    LoadingComponent {
-      width: 100%;
-      height: 100%;
+    .username {
+      font-style: italic;
+      font-size: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+
+      &:hover {
+        color: $ds_blue;
+      }
     }
   }
 }
