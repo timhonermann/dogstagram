@@ -6,7 +6,7 @@
       <div class="form-container">
         <input class="input" type="text" placeholder="E-Mail" v-model="email" />
         <input class="input" type="password" placeholder="Password" v-model="password" />
-        <input class="input" type="submit" value="Login" />
+        <button class="input" @click="login">Login</button>
         <p>
           Need an account? <router-link to="/register">Register here</router-link>
         </p>

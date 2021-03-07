@@ -81,7 +81,7 @@ html {
 
     button {
       border: 2px solid white;
-      border-radius: 20%;
+      //border-radius: 20%;
       background-color: $ds_darkgrey;
       padding: 5px;
       color: inherit;

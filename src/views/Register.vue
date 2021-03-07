@@ -11,7 +11,7 @@
           placeholder="Password"
           v-model="password"
         />
-        <input class="input" type="submit" value="Register" />
+        <button class="input" @click="registerUser">Register</button>
         <p>Have an account? <router-link to="/login">Login</router-link></p>
       </div>
     </form>
