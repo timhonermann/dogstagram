@@ -30,12 +30,12 @@
 </template>
 
 <script lang="ts">
+import { useToast } from "@/functions";
 import { Post } from "@/models";
 import { Cloudinary, CloudinaryApiResponse } from "@/settings/cloudinary";
 import { auth } from "@/settings/firebase";
 import { AxiosResponse } from "axios";
-import { computed, ref, inject } from "vue";
-import { Toast } from "vue-dk-toast";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { v4 } from "uuid";
 
@@ -43,7 +43,7 @@ export default {
   name: "Upload",
   setup() {
     const store = useStore();
-    const toast = inject<Toast>("$toast");
+    const toast = useToast();
 
     const caption = ref("");
     const isImagePresent = ref(false);
@@ -77,11 +77,9 @@ export default {
         reader.readAsDataURL(file);
         isImagePresent.value = true;
       } else {
-        if (toast) {
-          toast("Invalid Image (Invalid file type or file size > 10 MB)", {
-            type: "error"
-          });
-        }
+        toast("Invalid Image (Invalid file type or file size > 10 MB)", {
+          type: "error"
+        });
       }
     };
 
@@ -101,19 +99,15 @@ export default {
           } as Post;
 
           store.dispatch("uploadPost", post).then(() => {
-            if (toast) {
-              toast("Successfully Uploaded", { type: "success" });
-            }
+            toast("Successfully Uploaded", { type: "success" });
             imageUrl.value = getDefaultImage();
             caption.value = "";
           });
         })
         .catch(() => {
-          if (toast) {
-            toast("Error while uploading. Please try again.", {
-              type: "error"
-            });
-          }
+          toast("Error while uploading. Please try again.", {
+            type: "error"
+          });
         });
     };
 

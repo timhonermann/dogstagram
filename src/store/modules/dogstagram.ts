@@ -1,4 +1,4 @@
-import { sortPostsByPostedAtDate } from "@/functions";
+import { sortPostsByPostedAtDate, useToast } from "@/functions";
 import { setupFirestore } from "@/functions/setup-firestore.function";
 import { Account, Comment, Post } from "@/models";
 import router from "@/router";
@@ -9,14 +9,10 @@ import {
   usersCollection
 } from "@/settings/firebase";
 import firebase from "firebase";
-import { inject } from "vue";
-import { Toast } from "vue-dk-toast";
 import FieldValue = firebase.firestore.FieldValue;
 import QuerySnapshot = firebase.firestore.QuerySnapshot;
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 import UserCredential = firebase.auth.UserCredential;
-
-const toast = inject<Toast>("$toast");
 
 interface DogstagramState {
   isLoggedIn: boolean;
@@ -58,15 +54,12 @@ const actions = {
     { commit }: { commit: Function },
     payload: { email: string; password: string }
   ) {
-    auth
+    return auth
       .signInWithEmailAndPassword(payload.email, payload.password)
       .then(() => {
         commit("setLoggedIn", true);
         router.replace("/");
-      })
-      .catch(err =>
-        toast ? toast(err.message, { type: "error" }) : alert(err.message)
-      );
+      });
   },
 
   logout({ commit }: { commit: Function }) {
@@ -80,7 +73,7 @@ const actions = {
     { commit }: { commit: Function },
     payload: { email: string; password: string }
   ) {
-    auth
+    return auth
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then((userCredential: UserCredential) => {
         let name =
@@ -103,8 +96,7 @@ const actions = {
         }
 
         commit("setLoggedIn", true);
-      })
-      .catch(err => alert(err.message));
+      });
   },
 
   fetchPosts({ commit }: { commit: Function }) {

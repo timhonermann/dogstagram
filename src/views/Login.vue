@@ -18,17 +18,26 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useToast } from "@/functions";
 
 export default {
   name: "Login",
   setup() {
     const store = useStore();
+    const toast = useToast();
 
     const email = ref("");
     const password = ref("");
 
     const login = () => {
-      store.dispatch("login", { email: email.value, password: password.value });
+      store
+        .dispatch("login", { email: email.value, password: password.value })
+        .then(() => {
+          console.log("success");
+        })
+        .catch(error => {
+          toast(error.message, { type: "error" });
+        });
     };
 
     return {

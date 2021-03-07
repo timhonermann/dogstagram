@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import { useToast } from "@/functions";
 import { ref } from "vue";
 import { useStore } from "vuex";
 
@@ -26,15 +27,21 @@ export default {
   name: "Register",
   setup() {
     const store = useStore();
+    const toast = useToast();
 
     const email = ref("");
     const password = ref("");
 
     const registerUser = () => {
-      store.dispatch("register", {
-        email: email.value,
-        password: password.value
-      });
+      store
+        .dispatch("register", {
+          email: email.value,
+          password: password.value
+        })
+        .then(() => toast("Welcome to dogstagram", { type: "success" }))
+        .catch(err => {
+          toast(err.message, { type: "error" });
+        });
     };
 
     return {

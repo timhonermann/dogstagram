@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts">
+import { useToast } from "@/functions";
 import { auth } from "@/settings/firebase";
-import { computed, inject, PropType, ref } from "vue";
+import { computed, getCurrentInstance, inject, PropType, ref } from "vue";
 import { Account } from "@/models";
-import { Toast } from "vue-dk-toast";
 import { useStore } from "vuex";
 
 export default {
@@ -33,7 +33,7 @@ export default {
   },
   setup(props: any) {
     const store = useStore();
-    const toast = inject<Toast>("$toast");
+    const toast = useToast();
 
     const userId = auth.currentUser?.uid;
     const username = ref("");
@@ -44,17 +44,13 @@ export default {
         username.value?.length >= 3
     );
 
-    const account: Account = props?.account;
-
     const changeUsername = () => {
       const payload = {
         userId: userId,
         username: username.value
       };
       store.dispatch("updateUsername", payload).then(() => {
-        if (toast) {
-          toast("Changed Username", { type: "success" });
-        }
+        toast("Changed Username", { type: "success" });
         username.value = "";
       });
     };
