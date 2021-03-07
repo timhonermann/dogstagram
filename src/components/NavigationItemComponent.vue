@@ -1,7 +1,7 @@
 <template>
   <div class="navigation-item">
     <img :src="require(`@/assets/icons/${iconName}`)" alt="Nav Item Image" />
-    <p>{{ displayName }}</p>
+    <p data-test="displayName" >{{ displayName }}</p>
   </div>
 </template>
 

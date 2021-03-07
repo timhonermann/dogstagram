@@ -54,7 +54,9 @@ export default {
     const store = useStore();
     const route = useRoute();
 
-    const username = computed(() => store.getters["getUsername"](auth.currentUser?.uid));
+    const username = computed(() =>
+      store.getters["getUsername"](auth.currentUser?.uid)
+    );
     store.dispatch("fetchUsername", { userId: auth.currentUser?.uid });
     const sectionName = computed(() => {
       const sectionName = router.currentRoute.value.name;

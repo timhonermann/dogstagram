@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <span class="username" @click="redirectToUserDetailPage(comment.userUid)">{{ comment.username }}:</span>
-    <span class="comment">{{ comment.comment }}</span>
+    <span class="username" data-test="username" @click="redirectToUserDetailPage(comment.userUid)">{{ comment.username }}:</span>
+    <span class="comment" data-test="comment">{{ comment.comment }}</span>
   </div>
 </template>
 
